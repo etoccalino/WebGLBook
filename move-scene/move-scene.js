@@ -115,7 +115,7 @@ Model.prototype.init = function(param)
   var group = new THREE.Object3D;
 
   // Create our model
-  var geometry = new THREE.SphereGeometry(1, 32, 32);
+  var geometry = new THREE.CubeGeometry(1, 2, 1, 32, 32, 32)
   var material = new THREE.MeshPhongMaterial(
     { color: 0x0000ff , wireframe: false});
   var mesh = new THREE.Mesh( geometry, material );
