@@ -145,25 +145,16 @@ Model.prototype.handleMouseOut = function(x, y)
 
 Model.prototype.handleMouseDown = function(x, y, position, normal)
 {
-  this.lastx = x;
-  this.lasty = y;
-
   this.dragger.beginDrag(x, y);
 }
 
 Model.prototype.handleMouseUp = function(x, y, position, normal)
 {
   this.dragger.endDrag(x, y);
-
-  this.lastx = x;
-  this.lasty = y;
 }
 
 Model.prototype.handleMouseMove = function(x, y)
 {
-  this.deltax = x - this.lastx;
-  this.deltay = y - this.lasty;
-
   this.dragger.drag(x, y);
 }
 
