@@ -15,7 +15,7 @@ MoveApp.prototype.init = function(param)
 
   // Create a directional light to show off the model
   var light = new THREE.DirectionalLight( 0xffffff, 1);
-  light.position.set(0, 0, 1).normalize();
+  light.position.set(0, -1, 1).normalize();
   this.scene.add(light);
 
   this.camera.position.set(0, 0, 6);
@@ -65,10 +65,17 @@ MoveApp.prototype.handleMouseMove = function(x, y)
 	if (Math.abs(dx) > MoveApp.MOUSE_MOVE_TOLERANCE)
 	{
 	  this.root.rotation.y += (dx * 0.01);
+
+	  // Clamp to some outer boundary values
+	  if (this.root.rotation.y < MoveApp.MIN_ROTATION_Y)
+	    this.root.rotation.y = MoveApp.MIN_ROTATION_Y;
+
+	  if (this.root.rotation.y > MoveApp.MAX_ROTATION_Y)
+	    this.root.rotation.y = MoveApp.MAX_ROTATION_Y;
 	}
 	this.lastX = x;
 
-	return;
+	// return;
 
     // Move the whole scene around the X axis.
 	var dy = y - this.lastY;
@@ -77,12 +84,11 @@ MoveApp.prototype.handleMouseMove = function(x, y)
 	  this.root.rotation.x += (dy * 0.01);
 
 	  // Clamp to some outer boundary values
-	  if (this.root.rotation.x < 0)
-		this.root.rotation.x = 0;
+	  if (this.root.rotation.x < MoveApp.MIN_ROTATION_X)
+	    this.root.rotation.x = MoveApp.MIN_ROTATION_X;
 
 	  if (this.root.rotation.x > MoveApp.MAX_ROTATION_X)
-		this.root.rotation.x = MoveApp.MAX_ROTATION_X;
-
+	    this.root.rotation.x = MoveApp.MAX_ROTATION_X;
 	}
 	this.lastY = y;
   }
@@ -102,8 +108,11 @@ MoveApp.prototype.handleMouseScroll = function(delta)
 	this.camera.position.z = MoveApp.MAX_CAMERA_Z;
 }
 
-MoveApp.MOUSE_MOVE_TOLERANCE = 4;
+MoveApp.MOUSE_MOVE_TOLERANCE = 2;
 MoveApp.MAX_ROTATION_X = Math.PI / 2;
+MoveApp.MAX_ROTATION_Y = Math.PI / 2;
+MoveApp.MIN_ROTATION_X = -Math.PI / 2;
+MoveApp.MIN_ROTATION_Y = -Math.PI / 2;
 MoveApp.MIN_CAMERA_Z = 4;
 MoveApp.MAX_CAMERA_Z = 12;
 
@@ -133,9 +142,6 @@ Model.prototype.init = function(param)
   // Tell the framework about our object
   this.setObject3D(group);
   this.mesh = mesh;
-
-  // Raise the object half its height to be in level.
-  this.object3D.position.z = 0.5;
 }
 
 Model.prototype.createDragger = function()
@@ -200,4 +206,7 @@ Floor.prototype.init = function (params)
     , floor = new THREE.Mesh(geometry, material);
   group.add(floor);
   this.setObject3D(group);
+
+  // Lower the floor to level with the draggable objects.
+  this.object3D.position.z = -.5;
 }
