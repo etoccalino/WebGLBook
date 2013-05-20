@@ -28,7 +28,13 @@ MoveApp.prototype.init = function(param)
   // Add the dragger now, couldn't do that until we have a scene
   model.createDragger();
 
+  // Create the floor for the model
+  var floor = new Floor();
+  floor.init();
+  this.addObject(floor);
+
   this.model = model;
+  this.floor = floor;
 
   this.lastX = 0;
   this.lastY = 0;
@@ -102,7 +108,10 @@ MoveApp.MIN_CAMERA_Z = 4;
 MoveApp.MAX_CAMERA_Z = 12;
 
 
-// Custom model class
+//
+//
+//
+
 Model = function()
 {
   Sim.Object.call(this);
@@ -115,7 +124,7 @@ Model.prototype.init = function(param)
   var group = new THREE.Object3D;
 
   // Create our model
-  var geometry = new THREE.CubeGeometry(1, 2, 1, 32, 32, 32)
+  var geometry = new THREE.CubeGeometry(2, 2, 1, 32, 32, 32);
   var material = new THREE.MeshPhongMaterial(
     { color: 0x0000ff , wireframe: false});
   var mesh = new THREE.Mesh( geometry, material );
@@ -124,6 +133,9 @@ Model.prototype.init = function(param)
   // Tell the framework about our object
   this.setObject3D(group);
   this.mesh = mesh;
+
+  // Raise the object half its height to be in level.
+  this.object3D.position.z = 0.5;
 }
 
 Model.prototype.createDragger = function()
@@ -161,4 +173,31 @@ Model.prototype.handleMouseMove = function(x, y)
 Model.prototype.handleDrag = function(dragPoint)
 {
   this.object3D.position.copy(dragPoint);
+}
+
+
+//
+//
+//
+
+Floor = function ()
+{
+  return Sim.Object.call(this);
+}
+Floor.prototype = new Sim.Object();
+
+Floor.prototype.init = function (params)
+{
+  var group = new THREE.Object3D
+    , geometry = new THREE.PlaneGeometry(10, 10, 10, 10)
+    , material = new THREE.MeshBasicMaterial({
+        color: 0x010101,
+        opacity: .2,
+        transparent: true,
+        wireframe: true,
+        wireframeLinewidth: 2
+    })
+    , floor = new THREE.Mesh(geometry, material);
+  group.add(floor);
+  this.setObject3D(group);
 }
