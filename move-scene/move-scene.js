@@ -20,6 +20,16 @@ MoveApp.prototype.init = function(param)
 
   this.camera.position.set(0, 0, 6);
 
+  // Create the floor for the model
+  var floor = new Floor();
+  floor.init();
+  this.addObject(floor);
+
+  // Create the table in the center
+  var table = new Table();
+  table.init();
+  this.addObject(table);
+
   // Create the model and add it to our sim
   var model = new Model();
   model.init();
@@ -28,13 +38,7 @@ MoveApp.prototype.init = function(param)
   // Add the dragger now, couldn't do that until we have a scene
   model.createDragger();
 
-  // Create the floor for the model
-  var floor = new Floor();
-  floor.init();
-  this.addObject(floor);
-
   this.model = model;
-  this.floor = floor;
 
   this.lastX = 0;
   this.lastY = 0;
@@ -133,7 +137,7 @@ Model.prototype.init = function(param)
   var group = new THREE.Object3D;
 
   // Create our model
-  var geometry = new THREE.CubeGeometry(2, 2, 1, 32, 32, 32);
+  var geometry = new THREE.CubeGeometry(1, 1, 2, 32, 32, 32);
   var material = new THREE.MeshPhongMaterial(
     { color: 0x0000ff , wireframe: false});
   var mesh = new THREE.Mesh( geometry, material );
@@ -142,6 +146,8 @@ Model.prototype.init = function(param)
   // Tell the framework about our object
   this.setObject3D(group);
   this.mesh = mesh;
+
+  this.mesh.position.x = -3;
 }
 
 Model.prototype.createDragger = function()
@@ -208,5 +214,26 @@ Floor.prototype.init = function (params)
   this.setObject3D(group);
 
   // Lower the floor to level with the draggable objects.
-  this.object3D.position.z = -.5;
+  this.object3D.position.z = -1;
+}
+
+
+//
+//
+//
+
+Table = function ()
+{
+  return Sim.Object.call(this);
+}
+Table.prototype = new Sim.Object();
+
+Table.prototype.init = function (params)
+{
+  var group = new THREE.Object3D
+    , geometry = new THREE.CubeGeometry(2, 2, 1, 32, 32, 32)
+    , material = new THREE.MeshPhongMaterial({ color: 0x101510 , wireframe: false})
+    , table = new THREE.Mesh(geometry, material);
+  group.add(table);
+  this.setObject3D(group);
 }
