@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Move Things!</title>
+
+    <style>
+      body {
+        background-color:#eeeeee;
+        color:#212121;
+      }
+      #container {
+        z-index:-1;
+      }
+    </style>
+	<script src="../../libs/Three.js"></script>
+	<script src="../../libs/jquery-1.6.4.js"></script>
+    <script src="../../libs/jquery.mousewheel.js"></script>
+	<script src="../../libs/RequestAnimationFrame.js"></script>
+	<script src="../../sim/sim.js"></script>
+	<script src="../../sim/animation.js"></script>
+	<script src="../../sim/interaction.js"></script>
+	<script src="../../sim/ColladaLoader.js"></script>
+	<script src="move-scene-animated.js"></script>
+	<script>
+
+	var app = null;
+
+	$(document).ready(
+		function() {
+			var container = document.getElementById("container");
+			app = new MoveApp();
+			app.init({ container: container });
+			app.run();
+		}
+	);
+
+    // Dispatch user selection of robot
+    chooseRobot = function () {
+      var selected = $('select').val();
+      switch (selected) {
+        case "toy":
+          app.changeToRobot();
+          break
+        case "block":
+          app.changeToBlock();
+          break
+        case "none":
+          app.changeToNone();
+          break
+        default:
+          alert('Unknown robot selection');
+      }
+    }
+	</script>
+
+</head>
+<body>
+    <div id="container" style="width:95%; height:80%; position:absolute;"></div>
+    <select onchange="chooseRobot()">
+      <option value="none" selected="selected">Nothing</option>
+      <option value="block">Block</option>
+      <option value="toy">Toy</option>
+    </select>
+</body>
+</html>
