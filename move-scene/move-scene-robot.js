@@ -141,7 +141,7 @@ Model.prototype.init = function(param)
   this.setObject3D(group);
 
   var that = this;
-  var url = '../models/robot_cartoon_02/robot_cartoon_02.dae';
+  var url = '../../models/robot_cartoon_02/robot_cartoon_02.dae';
   var loader = new Sim.ColladaLoader;
   loader.load(url, function (data) {
 	that.handleLoaded(data)
@@ -162,7 +162,7 @@ Model.prototype.handleLoaded = function(data)
     this.object3D.add(model);
 
     // Move to a side, and stand up
-    model.position.x = -3;
+    model.position.x = 2;
     model.rotation.x = Math.PI / 2;
 
     this.model = model;
